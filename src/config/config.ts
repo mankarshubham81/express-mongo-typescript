@@ -6,7 +6,7 @@ const MONGO_USERNAME = process.env.MONGO_USERNAME || '';
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
 const MONGO_URL = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.dvpbbh6.mongodb.net/?appName=Cluster0`;
 // const MONGO_URL = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.dvpbbh6.mongodb.net/?appName=Cluster0`;
-// mongodb + srv://Sam2181:fCVgKuQfiq6Grxzh@cluster0.dvpbbh6.mongodb.net/?appName=Cluster0
+// mongodb + srv://Sampleuser2181:samplePassword@cluster0.dvpbbh6.mongodb.net/?appName=Cluster0
 // `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.dvpbbh6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // retryWrites=true&w=majority&appName=Cluster0
 
