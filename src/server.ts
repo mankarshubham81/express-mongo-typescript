@@ -6,7 +6,7 @@ import Logging from './library/Logging';
 import authorRoutes from './routes/Author';
 import bookRoutes from './routes/Book';
 import userRoutes from './routes/User';
-import authRoutes from './controllers/auth';
+import authRoutes from './routes/auth';
 
 
 
@@ -59,7 +59,7 @@ const startServer = () => {
     router.use('/authors', authorRoutes);
     router.use('/books', bookRoutes);
     router.use('/users', userRoutes);
-    router.use('/api/auth', authRoutes)
+    router.use('/api/auth', authRoutes);
 
 
 
