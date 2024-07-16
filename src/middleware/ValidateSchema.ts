@@ -62,5 +62,11 @@ export const Schemas = {
             email: Joi.string().min(5).max(255).required().email(),
             password: PasswordComplexity(passwordComplexityOptions).required()
         })
+    },
+    validUser: {
+        authUser: Joi.object<IUser>({
+            email: Joi.string().min(5).max(255).required().email(),
+            password: PasswordComplexity(passwordComplexityOptions).required()
+        })
     }
 }

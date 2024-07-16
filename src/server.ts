@@ -5,6 +5,9 @@ import { config } from './config/config';
 import Logging from './library/Logging';
 import authorRoutes from './routes/Author';
 import bookRoutes from './routes/Book';
+import userRoutes from './routes/User';
+import authRoutes from './controllers/auth';
+
 
 
 const router = express();
@@ -55,12 +58,19 @@ const startServer = () => {
     // ***** Routes ///
     router.use('/authors', authorRoutes);
     router.use('/books', bookRoutes);
+    router.use('/users', userRoutes);
+    router.use('/api/auth', authRoutes)
+
+
 
 
 
     //***** */ Healthcheck ///
     router.get('/ping', (req, res, next) => {
         res.status(200).json({ message: 'pong' });
+    })
+    router.get('/', (req, res, next) => {
+        res.status(200).json({ message: 'Home route' });
     })
 
     router.use((req, res, next) => {
