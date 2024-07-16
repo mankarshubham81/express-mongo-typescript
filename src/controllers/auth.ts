@@ -1,5 +1,4 @@
 import { NextFunction, Response, Request } from 'express';
-import mongoose from 'mongoose';
 import _ from 'lodash';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
