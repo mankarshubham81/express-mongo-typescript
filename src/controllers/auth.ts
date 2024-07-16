@@ -17,10 +17,11 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).json({ user, message: `Invalid Email or password ` })
 
-    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
+    // const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
 
-    const token = jwt.sign({ _id: user._id }, jwtPrivateKey);
+    // const token = jwt.sign({ _id: user._id }, jwtPrivateKey);
 
+    const token = user.generateAuthToken();
 
     res.send(token);
     // user = new User(_.pick(req.body, ['name', 'email', 'password', '_id']));

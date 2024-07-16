@@ -1,9 +1,10 @@
 import mongoose, { Document, Schema } from "mongoose";
-
+import jwt from 'jsonwebtoken';
 export interface IUser {
     name: string;
     email: string;
     password: string;
+    generateAuthToken: () => string;
 }
 
 export interface IUserModel extends IUser, Document {
@@ -36,5 +37,11 @@ const UserSchema: Schema = new Schema(
         versionKey: false
     }
 );
+
+UserSchema.methods.generateAuthToken = function () {
+    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
+    const token = jwt.sign({ _id: this._id, name: this.name }, jwtPrivateKey);
+    return token;
+};
 
 export default mongoose.model<IUserModel>('User', UserSchema);

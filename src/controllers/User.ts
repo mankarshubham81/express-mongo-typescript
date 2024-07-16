@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,9 +17,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt); // hashed password
 
-    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
-    const token = jwt.sign({ _id: user._id }, jwtPrivateKey);
+    // const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
+    // const token = jwt.sign({ _id: user._id }, jwtPrivateKey);
 
+    const token = user.generateAuthToken();
 
     return user
         .save()
