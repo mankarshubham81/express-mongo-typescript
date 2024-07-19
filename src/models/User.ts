@@ -4,6 +4,7 @@ export interface IUser {
     name: string;
     email: string;
     password: string;
+    isAdmin: boolean;
     generateAuthToken: () => string;
 }
 
@@ -31,7 +32,11 @@ const UserSchema: Schema = new Schema(
             required: true,
             minlength: 8,
             maxlenght: 1024,
-        }
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false
+        },
     },
     {
         versionKey: false
@@ -40,7 +45,7 @@ const UserSchema: Schema = new Schema(
 
 UserSchema.methods.generateAuthToken = function () {
     const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
-    const token = jwt.sign({ _id: this._id, name: this.name }, jwtPrivateKey);
+    const token = jwt.sign({ _id: this._id, name: this.name, isAdmin: this.isAdmin }, jwtPrivateKey);
     return token;
 };
 

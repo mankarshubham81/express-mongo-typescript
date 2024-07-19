@@ -55,12 +55,14 @@ export const Schemas = {
         create: Joi.object<IUser>({
             name: Joi.string().min(5).max(50).required(),
             email: Joi.string().min(5).max(255).required().email(),
-            password: PasswordComplexity(passwordComplexityOptions).required()
+            password: PasswordComplexity(passwordComplexityOptions).required(),
+            isAdmin: Joi.boolean().default(false)
         }),
         update: Joi.object<IUser>({
             name: Joi.string().min(5).max(50).required(),
             email: Joi.string().min(5).max(255).required().email(),
-            password: PasswordComplexity(passwordComplexityOptions).required()
+            password: PasswordComplexity(passwordComplexityOptions).required(),
+            isAdmin: Joi.boolean().default(false)
         })
     },
     validUser: {

@@ -4,6 +4,6 @@ import { Schemas, ValidateSchema } from '../middleware/ValidateSchema';
 
 const router = express.Router();
 
-router.post('/', ValidateSchema(Schemas.validUser.authUser), controller.authUser);
+router.post('/', ValidateSchema(Schemas.validUser.authUser), controller.authu);
 
 export = router;

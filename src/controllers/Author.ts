@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import Author from '../models/Author';
 
 const createAuthor = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req);
     const { name } = req.body;
 
     const author = new Author({
