@@ -1,4 +1,5 @@
 import express from 'express';
+require('express-async-errors');
 import controller from '../controllers/User';
 import authMiddleware from '../middleware/auth';
 import { admin } from '../middleware/admin';
