@@ -1,7 +1,8 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.barcketPairColorization.enabled": true,
-    "editor.formatOnsave": true,
-    "editor.formatOnSave": true,
-    "editor.wordWrap": "on"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.barcketPairColorization.enabled": true,
+  "editor.formatOnsave": true,
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
