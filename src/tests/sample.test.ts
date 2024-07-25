@@ -1,4 +1,4 @@
-import { absolute, greet } from '../sample';
+import { absolute, greet, getCurrencies } from '../sample';
 
 
 describe('absolute', () => {
@@ -30,4 +30,30 @@ describe('greet', () => {
         expect(result).toContain('Shubham');
 
     });
-})
+});
+
+describe('getCurrencies', () => {
+    it('should return supproting currencies', () => {
+        const result = getCurrencies();
+        // // Ways to test
+        // // Too General
+        // expect(result).toBeDefined();
+        // expect(result).not.toBeNull();
+
+
+        // // Too Specific
+        // expect(result[0]).toBe('USD');
+        // expect(result[1]).toBe('AUD');
+        // expect(result[2]).toBe('EUR');
+        // expect(result.length).toBe(3);
+
+        // // Proper way
+        // expect(result).toContain('USD');
+        // expect(result).toContain('AUD');
+        // expect(result).toContain('EUR');
+
+        // Ideal way
+        expect(result).toEqual(expect.arrayContaining(['USD', 'AUD', 'EUR']));
+
+    });
+});
