@@ -28,7 +28,6 @@ describe('greet', () => {
         const result = greet('Shubham');
         expect(result).toMatch(/Shubham/);
         expect(result).toContain('Shubham');
-
     });
 });
 
@@ -36,23 +35,23 @@ describe('getCurrencies', () => {
     it('should return supproting currencies', () => {
         const result = getCurrencies();
         // // Ways to test
-        // // Too General
+        // // Too General - should be avoided
         // expect(result).toBeDefined();
         // expect(result).not.toBeNull();
 
 
-        // // Too Specific
+        // // Too Specific - should be avoided
         // expect(result[0]).toBe('USD');
         // expect(result[1]).toBe('AUD');
         // expect(result[2]).toBe('EUR');
         // expect(result.length).toBe(3);
 
-        // // Proper way
+        // // Proper way - good way
         // expect(result).toContain('USD');
         // expect(result).toContain('AUD');
         // expect(result).toContain('EUR');
 
-        // Ideal way
+        // Ideal way - better way
         expect(result).toEqual(expect.arrayContaining(['USD', 'AUD', 'EUR']));
 
     });
