@@ -44,7 +44,7 @@ const UserSchema: Schema = new Schema(
 );
 
 UserSchema.methods.generateAuthToken = function () {
-    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
+    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || 'defaultPrivateKey';
     const token = jwt.sign({ _id: this._id, name: this.name, isAdmin: this.isAdmin }, jwtPrivateKey);
     return token;
 };

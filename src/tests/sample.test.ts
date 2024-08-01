@@ -1,5 +1,6 @@
-import { any } from 'joi';
-import { absolute, greet, getCurrencies, getProducts, registerUser } from '../sample';
+import { any, number } from 'joi';
+import { absolute, greet, getCurrencies, getProducts, registerUser, applyDiscount } from '../sample';
+// import { getCustomerSync } from './../db-sample/db';
 
 
 describe('absolute', () => {
@@ -99,5 +100,16 @@ describe('registerUser', () => {
         expect(result.id).toBeGreaterThan(0)
     })
 });
+
+// describe('applyDiscount', () => {
+//     it('Should apply 10% discount if customer has more than 10 points', () => {
+//         const order = { customerId: 1, totalPrice: 10 }
+//         getCustomerSync = (id: number) => {
+//             return {  id: id, points: 20 }
+//         }
+//         applyDiscount(order);
+//         expect(order.totalPrice).toBe(9);
+//     })
+// });
 
 
