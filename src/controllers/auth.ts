@@ -12,7 +12,7 @@ const authu = async (req: Request, res: Response, next: NextFunction) => {
     if (!token) return res.status(401).json({ message: `Access denied. No token provided` });
 
 
-    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || '';
+    const jwtPrivateKey = process.env.JWT_PRIVATE_KEY?.toString() || 'defaultPrivateKey';
     try {
 
         const decoded = jwt.verify(token, jwtPrivateKey);
