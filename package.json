@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.4.5"
+    "mongoose": "^8.4.5",
+    "node-cache": "^5.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

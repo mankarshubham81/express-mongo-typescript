@@ -1,61 +1,84 @@
 import { NextFunction, Response, Request } from 'express';
 import mongoose from 'mongoose';
 import Author from '../models/Author';
+import nodeCache from '../utils/cache/cache';
 
-const createAuthor = (req: Request, res: Response, next: NextFunction) => {
+
+const createAuthor = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
 
-    const author = new Author({
-        _id: new mongoose.Types.ObjectId(),
-        name
-    });
+    try {
+        const author = new Author({
+            _id: new mongoose.Types.ObjectId(),
+            name
+        });
 
-    return author
-        .save()
-        .then((author) => res.status(200).json({ author }))
-        .catch((err) => res.status(500).json({ err }));
+        const savedAuthor = await author.save();
+        if (savedAuthor) nodeCache.del("allAuthors");
+        return res.status(200).json({ author: savedAuthor });
+
+    } catch (err) {
+        return res.status(500).json({ err });
+    }
 };
 
-const readAuthor = (req: Request, res: Response, next: NextFunction) => {
+const readAuthor = async (req: Request, res: Response, next: NextFunction) => {
     const authorId = req.params.authorId;
 
-    return Author.findById(authorId)
-        .then(author => author ? res.status(200).json({ author }) : res.status(404).json({ message: "Author Not Found" }))
-        .catch((err) => res.status(500).json({ err }));
+    try {
+        const author = await Author.findById(authorId);
+        return author ? res.status(200).json({ author }) : res.status(404).json({ message: "Author Not Found" });
+    } catch (err) {
+        return res.status(500).json({ err });
+    }
 };
 
-const readAllAuthor = (req: Request, res: Response, next: NextFunction) => {
-    return Author.find()
-        .then(authors => res.status(200).json({ authors }))
-        .catch((err) => res.status(500).json({ err }))
+
+const readAllAuthor = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let authors;
+        const cachedAuthors = nodeCache.get("allAuthors");
+        if (nodeCache.has("allAuthors")) {
+            authors = JSON.parse(cachedAuthors as string);
+        } else {
+            authors = await Author.find();
+            nodeCache.set("allAuthors", JSON.stringify(authors));
+        }
+        return res.status(200).json({ authors });
+    } catch (err) {
+        return res.status(500).json({ err });
+    }
 };
 
-const updateAuthor = (req: Request, res: Response, next: NextFunction) => {
+const updateAuthor = async (req: Request, res: Response, next: NextFunction) => {
     const authorId = req.params.authorId;
 
-    return Author.findById(authorId)
-        .then(author => {
-            if (author) {
-                author.set(req.body);
+    try {
+        const author = await Author.findById(authorId);
 
-                return author
-                    .save()
-                    .then((author) => res.status(200).json({ author }))
-                    .catch((err) => res.status(500).json({ err }));
-            } else {
-                res.status(404).json({ message: "Author Not Found" })
-            }
-        })
-        .catch((err) => res.status(500).json({ err }));
-
+        if (author) {
+            author.set(req.body);
+            const updatedAuthor = await author.save();
+            nodeCache.del("allAuthors");
+            return res.status(200).json({ author: updatedAuthor });
+        } else {
+            return res.status(404).json({ message: "Author Not Found" });
+        }
+    } catch (err) {
+        return res.status(500).json({ err });
+    }
 };
-const deleteAuthor = (req: Request, res: Response, next: NextFunction) => {
+
+const deleteAuthor = async (req: Request, res: Response, next: NextFunction) => {
     const authorId = req.params.authorId;
 
-    return Author.findByIdAndDelete(authorId)
-        .then(author => author ? res.status(200).json({ author, message: "this data is deleted" }) : res.status(404).json({ message: "Author Not Found" }))
-        .catch((err) => res.status(500).json({ err }));
-
+    try {
+        const author = await Author.findByIdAndDelete(authorId);
+        if (author) nodeCache.del("allAuthors");
+        return author ? res.status(200).json({ author, message: "This data is deleted" }) : res.status(404).json({ message: "Author Not Found" });
+    } catch (err) {
+        return res.status(500).json({ err });
+    }
 };
 
 export default { createAuthor, readAuthor, readAllAuthor, updateAuthor, deleteAuthor };
