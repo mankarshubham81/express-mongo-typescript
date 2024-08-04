@@ -9,79 +9,72 @@ import userRoutes from './routes/User';
 import authRoutes from './routes/auth';
 
 
+const app = express();
 
-const router = express();
-
-/* Connect  to Mongo**/
+/* Connect to Mongo */
 mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
     .then(() => {
-        Logging.info("connected to Mongo..")
+        Logging.info("connected to Mongo..");
         startServer();
-
     })
     .catch((err) => {
         Logging.error("mongoose.connect error: " + err);
-    })
-
-// Only start the server if the mongo is connected
-
-const startServer = () => {
-    router.use((req, res, next) => {
-        // log the request
-        Logging.info(`Incomming --> Method: [${req.method}] - Url: [${req.url}] - IP : [${req.socket.remoteAddress}]`);
-
-        res.on('finish', () => {
-            // Log the Response
-            Logging.info(`Incomming --> Method: [${req.method}] - Url: [${req.url}] - IP : [${req.socket.remoteAddress}] - status: [${res.statusCode}]`);
-
-        });
-        next();
-
     });
 
-    router.use(express.urlencoded({ extended: true }));
-    router.use(express.json());
+// Only start the server if Mongo is connected
+const startServer = () => {
+    app.use((req, res, next) => {
+        // Log the request
+        Logging.info(`Incoming --> Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+
+        res.on('finish', () => {
+            // Log the response
+            Logging.info(`Incoming --> Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}] - Status: [${res.statusCode}]`);
+        });
+        next();
+    });
+
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
 
     /** Rules of our API */
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-HJeaders', 'Origin, X-Requested-with, Content-Type, Accept, Authorization');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-        if (req.method == 'OPTIONS') {
+        if (req.method === 'OPTIONS') {
             res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
             return res.status(200).json({});
         }
 
         next();
-    })
-
-    // ***** Routes ///
-    router.use('/authors', authorRoutes);
-    router.use('/books', bookRoutes);
-    router.use('/users', userRoutes);
-    router.use('/api/auth', authRoutes);
-
-
-
-
-
-    //***** */ Healthcheck ///
-    router.get('/ping', (req, res, next) => {
-        res.status(200).json({ message: 'pong' });
-    })
-    router.get('/', (req, res, next) => {
-        res.status(200).json({ message: 'Home route' });
-    })
-
-    router.use((req, res, next) => {
-        const error = new Error('Not Found');
-        Logging.error(error);
-        res.status(400).json({ message: error.message });
     });
 
+    // Routes
+    app.use('/authors', authorRoutes);
+    app.use('/books', bookRoutes);
+    app.use('/users', userRoutes);
+    app.use('/api/auth', authRoutes);
 
-    http.createServer(router).listen(config.server.port, () => {
-        Logging.info(`Server is running on port ${config.server.port}`)
-    })
+    // Health check
+    app.get('/ping', (req, res, next) => {
+        res.status(200).json({ message: 'pong' });
+    });
 
+    app.get('/', (req, res, next) => {
+        res.status(200).json({ message: 'Home route' });
+    });
+
+    // Error handling
+    app.use((req, res, next) => {
+        const error = new Error('Not Found');
+        Logging.error(error);
+        res.status(404).json({ message: error.message });
+    });
+
+    http.createServer(app).listen(config.server.port, () => {
+        Logging.info(`Server is running on port ${config.server.port}`);
+    });
 };
+
+export default app; // Export the app instance
